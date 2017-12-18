@@ -60,8 +60,8 @@ class TasksController extends Controller
             'content' => 'required|max:255',
         ]);
         
-        $task = new task;
-        $task->title = $request->title;    //追加
+        $task = new Task;
+        $task->status = $request->status;    //追加
         $task ->content = $request->content;
         $task ->save();
         
@@ -120,7 +120,7 @@ class TasksController extends Controller
             ]);
         
         $task = Task::find($id);
-        $task ->title = $request->title; //追加
+        $task ->status = $request->status; //追加
         $task ->content = $request->content;
         $task ->save();
         
