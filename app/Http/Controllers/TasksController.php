@@ -57,7 +57,7 @@ class TasksController extends Controller
         //追加
         $this->validate($request, [
             'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
-            'content' => 'required|max:10',
+            'content' => 'required|max:255',
         ]);
         
         $task = new task;
@@ -116,7 +116,7 @@ class TasksController extends Controller
         
         $this->validate($request, [
             'status' => 'required|max:10', //追加
-            'content' => 'required|max:10',
+            'content' => 'required|max:255',
             ]);
         
         $task = Task::find($id);
