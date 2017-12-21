@@ -14,9 +14,11 @@ class TasksController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * getでtasks/にアクセスされた場合の「一覧表示処理」
+     * 
      * @return \Illuminate\Http\Response
      */
-     // getでtasks/にアクセスされた場合の「一覧表示処理」
+    
     public function index()
     {
         //追加
@@ -32,9 +34,11 @@ class TasksController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * getでtasks/createにアクセスされた場合の「新規登録画面表示処理」
+     * 
      * @return \Illuminate\Http\Response
      */
-      // getでtasks/createにアクセスされた場合の「新規登録画面表示処理」
+      
     public function create()
     {
         //追加
@@ -48,10 +52,12 @@ class TasksController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * // postでtasks/にアクセスされた場合の「新規登録処理」
+     * 
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-      // postでtasks/にアクセスされた場合の「新規登録処理」
+    
     public function store(Request $request)
     {
         //追加
@@ -71,10 +77,15 @@ class TasksController extends Controller
     /**
      * Display the specified resource.
      *
+     * getでtasks/idにアクセスされた場合の「取得表示処理」
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-      // getでtasks/idにアクセスされた場合の「取得表示処理」
+    
+    /*show アクションには $id の引数が与えられます。これは /tasks/1, /tasks/2 と言った URL にアクセスされたときに、 $id = 1 として代入されます。
+    また、 index アクションのときは Message::all() でレコード全てを取得していましたが、今回は $id が指定されているので、 task::find($id) によって1つだけ取得します。
+    そのため、 $message 変数も単数形の命名にしています  */
     public function show($id)
     {
         //追加
@@ -88,10 +99,12 @@ class TasksController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * getでtasks/id/editにアクセスされた場合の「更新画面表示処理」
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-      // getでtasks/id/editにアクセスされた場合の「更新画面表示処理」
+      
     public function edit($id)
     {
         //追加
@@ -105,11 +118,13 @@ class TasksController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * getでtasks/id/にアクセスされた場合の「更新処理」
+     * 
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-      // getでtasks/id/にアクセスされた場合の「更新処理
+     
     public function update(Request $request, $id)
     {
         //追加
@@ -130,10 +145,12 @@ class TasksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * deleteでtasks/idにアクセスされた場合の「削除処理」
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-      // deleteでtasks/idにアクセスされた場合の「削除処理」
+     
     public function destroy($id)
     {
         //追加
