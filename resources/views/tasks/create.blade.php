@@ -26,7 +26,7 @@
         row と col-xs-6 のdiv要素を囲んでください。col-xs-6 の6= 6/12 なので横半分になります。-->
        
         <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-12, col-sm-offset-2 col-sm-6, col-md-offset-2 col-md-6,col-lg-offset-3 col-lg-3">
             {!! Form::model($task, ['route' => 'tasks.store']) !!}
             
                 <div class="form-group">
