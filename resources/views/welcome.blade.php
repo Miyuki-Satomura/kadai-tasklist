@@ -1,3 +1,4 @@
+<!-- 予めwelcome.blade.php に予め書かれていたものは不要なので全て削除して下記の通りにしてください。
 <!DOCTYPE html>
 <html>
     <head>
@@ -43,3 +44,14 @@
         </div>
     </body>
 </html>
+-->
+
+@extends('layouts.app')
+
+@section('content')
+    <div class="center jumbotron">
+        <div class="text-center">
+            <h1>Welcome to the Microposts</h1>
+        </div>
+    </div>
+@endsection
