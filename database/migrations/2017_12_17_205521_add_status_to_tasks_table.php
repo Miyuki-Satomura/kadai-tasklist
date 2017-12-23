@@ -15,6 +15,7 @@ class AddStatusToTasksTable extends Migration
         Schema::table('tasks', function (Blueprint $table) {
             //カラムを追加可能にする
             $table->string('status','10');
+           
         });
     }
 
@@ -28,6 +29,7 @@ class AddStatusToTasksTable extends Migration
         Schema::table('tasks', function (Blueprint $table) {
             //カラムを削除可能にする
             $table->dropColumn('status');
+        
         });
     }
 }
