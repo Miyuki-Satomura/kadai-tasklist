@@ -27,3 +27,4 @@ Route::post('signup', 'Auth\AuthController@postRegister')->name('signup.post');
 Route::get('login', 'Auth\AuthController@getLogin')->name('login.get');
 Route::post('login', 'Auth\AuthController@postLogin')->name('login.post');
 Route::get('logout', 'Auth\AuthController@getLogout')->name('logout.get');
+
