@@ -4,8 +4,8 @@
 
        <!--もしもログインしていたら、-->
        @if (Auth::check())
-       <?php $user = Auth::user(); ?>
-        {{ $user->name }}
+   <!--    <?php $user = Auth::user(); ?>
+        {{ $user->name }} -->
        <!-- ここにログイン時は、タスク一覧を表示させるためのコードを書く-->
        <h1>タスク一覧</h1>
      
