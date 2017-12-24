@@ -22,7 +22,9 @@ class TasksController extends Controller
     public function index()
     {
         //追加
+    
         
+        //追加
         $tasks = Task::all();
         
         return view('tasks.index',[
@@ -89,13 +91,15 @@ class TasksController extends Controller
   
     public function show($id)
     {
-//追加
-$task = Task::find($id);
+        
+   
+       //追加
+        $task = Task::find($id);
 
-return view('tasks.show',[
-'task' => $task,
-]);
-}
+        return view('tasks.show',[
+        'task' => $task,
+        ]);
+    }
 
     /**
      * Show the form for editing the specified resource.
