@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddStatusToTasksTable extends Migration
+class AddUserIdToTasks extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class AddStatusToTasksTable extends Migration
     public function up()
     {
         Schema::table('tasks', function (Blueprint $table) {
-        //カラムを追加可能にする
-            $table->string('status','10');
-           
-        });
+            //追加
+            $table->integer('user_id')->unsigned()->index();
+        
+        
+            // 外部キー制約
+            $table->foreign('user_id')->references('id')->on('users');
+            
+        });    
     }
 
     /**
@@ -27,9 +31,8 @@ class AddStatusToTasksTable extends Migration
     public function down()
     {
         Schema::table('tasks', function (Blueprint $table) {
-            //カラムを削除可能にする
-            $table->dropColumn('status');
-        
+            //追加
+            $table->dropColumn('users');
         });
     }
 }

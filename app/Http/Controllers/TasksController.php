@@ -63,6 +63,15 @@ class TasksController extends Controller
     public function store(Request $request)
     {
  
+        //追加
+       // $this->validate($request, [
+       //       'content' => 'required|max:255',
+       //]);
+       
+       //追加
+       $request->user()->tasks()->create([
+           'content' => $request->content,
+       ]);
         
         
         //追加
@@ -70,6 +79,13 @@ class TasksController extends Controller
             'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
             'title' => 'required|max:255',
         ]);
+        
+         $request->user()->tasklists()->create([
+            'status' => $request->status,
+            'title' => $request->title,
+        ]);
+        
+        
         
         $task = new Task;
         $task->status = $request->status;    //追加
@@ -94,10 +110,21 @@ class TasksController extends Controller
    
        //追加
         $task = Task::find($id);
+        $microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10);
+        
+        $data = [
+            'user' => $user,
+            'microposts' => $microposts,
+        ];
+        
+        $data += $this->counts($user);
+        
+        return view('users.show', $data);
+        
 
         // ここに、ログインしているユーザーのIDと、$task を所有しているユーザーのIDが
         // 異なっていたら、リダイレクトする処理を書いてください
-        \Auth::user()
+        \Auth::user();
 
         return view('tasks.show',[
         'task' => $task,
@@ -116,7 +143,7 @@ class TasksController extends Controller
     public function edit($id)
     {
         //追加
-        \Auth::user()
+        \Auth::user();
         
         $task = Task::find($id);
         
@@ -167,10 +194,17 @@ class TasksController extends Controller
     public function destroy($id)
     {
         
-       
+        //追加
+        $micropost = \App\Tasklist::find($id);
+
+        if (\Auth::user()->id === $tasklist->user_id) {
+            $tasklist->delete();
+        }
+
+        return redirect()->back();
 
         //追加
-        \Auth::user()
+        \Auth::user();
         
         $task = Task::find($id);
         $task ->delete();
