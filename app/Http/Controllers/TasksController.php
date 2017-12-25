@@ -91,10 +91,13 @@ class TasksController extends Controller
   
     public function show($id)
     {
-        
    
        //追加
         $task = Task::find($id);
+
+        // ここに、ログインしているユーザーのIDと、$task を所有しているユーザーのIDが
+        // 異なっていたら、リダイレクトする処理を書いてください
+        \Auth::user()
 
         return view('tasks.show',[
         'task' => $task,
@@ -113,6 +116,8 @@ class TasksController extends Controller
     public function edit($id)
     {
         //追加
+        \Auth::user()
+        
         $task = Task::find($id);
         
         return view('tasks.edit', [
@@ -165,6 +170,8 @@ class TasksController extends Controller
        
 
         //追加
+        \Auth::user()
+        
         $task = Task::find($id);
         $task ->delete();
         
