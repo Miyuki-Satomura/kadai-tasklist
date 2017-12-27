@@ -23,14 +23,23 @@ class TasksController extends Controller
     {
         //追加
     
+        $tasks = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
+//dd( $tasks);
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+            
+        } else {
+            return view('welcome', [
+              'tasks'=>$tasks,
+                ]);
+        }
         
-        //追加
-        $tasks = Task::all();
-        
-        return view('tasks.index',[
-            'tasks' => $tasks,
-            ]);
-        
+          return view('tasks.index', $data);
     }
 
     /**
@@ -40,7 +49,6 @@ class TasksController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-      
     public function create()
     {
         //追加
@@ -59,42 +67,29 @@ class TasksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    
     public function store(Request $request)
     {
  
-        //追加
-       // $this->validate($request, [
-       //       'content' => 'required|max:255',
-       //]);
-       
-       //追加
-       $request->user()->tasks()->create([
-           'content' => $request->content,
-       ]);
+
+       if (\Auth::check()) {
+           //追加
+           $this->user_id =\Auth::user()->user_id;
+            
+            //追加
+            $this->validate($request, [
+                'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
+                'title' => 'required|max:255',
+            ]);
+         
+            $request->user()->tasks()->create([
+                'status' => $request->status,
+                'title' => $request->title,
+            ]);
         
-        
-        //追加
-        $this->validate($request, [
-            'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
-            'title' => 'required|max:255',
-        ]);
-        
-         $request->user()->tasklists()->create([
-            'status' => $request->status,
-            'title' => $request->title,
-        ]);
-        
-        
-        
-        $task = new Task;
-        $task->status = $request->status;    //追加
-        $task ->title = $request->title;
-        $task ->save();
+       }
         
         return redirect('/');
     }
-
     /**
      * Display the specified resource.
      *
@@ -103,32 +98,16 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    
-  
     public function show($id)
     {
-   
-       //追加
-        $task = Task::find($id);
-        $microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10);
-        
-        $data = [
-            'user' => $user,
-            'microposts' => $microposts,
-        ];
-        
-        $data += $this->counts($user);
-        
-        return view('users.show', $data);
-        
-
-        // ここに、ログインしているユーザーのIDと、$task を所有しているユーザーのIDが
-        // 異なっていたら、リダイレクトする処理を書いてください
-        \Auth::user();
-
-        return view('tasks.show',[
-        'task' => $task,
-        ]);
+        //追加
+        $tasks = [];
+        if (\Auth::check()) {
+            $task = Task::find($id);
+        }
+        return view('tasks.show', [
+            'task' => $task,
+            ]);
     }
 
     /**
@@ -142,14 +121,15 @@ class TasksController extends Controller
       
     public function edit($id)
     {
-        //追加
-        \Auth::user();
+      
+        $task = \Auth::user(); 
         
         $task = Task::find($id);
         
         return view('tasks.edit', [
             'task' => $task,
             ]);
+            
     }
 
     /**
@@ -165,21 +145,20 @@ class TasksController extends Controller
     public function update(Request $request, $id)
     {
         //追加
+        $tasks = [];
+        if (\Auth::check()) {
+            $task = Task::find($id);
+            $task ->status = $request->status; //追加
+            $task ->title = $request->title;
+            $task ->save();  
+        }
         
-        $this->validate($request, [
+            $this->validate($request, [
             'status' => 'required|max:10', //追加
             'title' => 'required|max:255',
             ]);
-        
-        $task = Task::find($id);
-        $task ->status = $request->status; //追加
-        $task ->title = $request->title;
-        $task ->save();
-        
+
         return redirect('/');
-
-        
-
     }
 
     /**
@@ -193,23 +172,14 @@ class TasksController extends Controller
      
     public function destroy($id)
     {
-        
-        //追加
-        $micropost = \App\Tasklist::find($id);
+        $tasks = [];
+        if (\Auth::check()) {
+            //$task = \Auth::user(); 
+            $task = Task::find($id);
+//            dd($task);
+            $task->delete();    
 
-        if (\Auth::user()->id === $tasklist->user_id) {
-            $tasklist->delete();
         }
-
-        return redirect()->back();
-
-        //追加
-        \Auth::user();
-        
-        $task = Task::find($id);
-        $task ->delete();
-        
         return redirect('/');
-       
     }
 }

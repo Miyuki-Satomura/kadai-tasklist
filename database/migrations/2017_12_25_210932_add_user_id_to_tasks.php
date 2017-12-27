@@ -15,10 +15,10 @@ class AddUserIdToTasks extends Migration
         Schema::table('tasks', function (Blueprint $table) {
             //追加
             $table->integer('user_id')->unsigned()->index();
-        
-        
+            
             // 外部キー制約
             $table->foreign('user_id')->references('id')->on('users');
+   
             
         });    
     }
@@ -32,7 +32,8 @@ class AddUserIdToTasks extends Migration
     {
         Schema::table('tasks', function (Blueprint $table) {
             //追加
-            $table->dropColumn('users');
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('users_id');
         });
     }
 }
