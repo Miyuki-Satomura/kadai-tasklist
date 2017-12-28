@@ -29,17 +29,17 @@ class TasksController extends Controller
             $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
 //dd( $tasks);
             $data = [
-                'user' => $user,
-                'tasks' => $tasks,
+                    'user' => $user,
+                    'tasks' => $tasks,
             ];
             
         } else {
             return view('welcome', [
-              'tasks'=>$tasks,
-                ]);
+                    'tasks'=>$tasks,
+            ]);
         }
         
-          return view('tasks.index', $data);
+            return view('tasks.index', $data);
     }
 
     /**
@@ -50,13 +50,13 @@ class TasksController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //追加
-        $task = new Task;
+        {
+            //追加
+            $task = new Task;
         
-        return view('tasks.create', [
-            'task' => $task,
-    ]);
+            return view('tasks.create', [
+                    'task' => $task,
+        ]);
     }
 
     /**
@@ -71,24 +71,24 @@ class TasksController extends Controller
     {
  
 
-       if (\Auth::check()) {
-           //追加
-           $this->user_id =\Auth::user()->user_id;
+        if (\Auth::check()) {
+            //追加
+            $this->user_id =\Auth::user()->user_id;
             
             //追加
             $this->validate($request, [
-                'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
-                'title' => 'required|max:255',
+                    'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
+                    'title' => 'required|max:255',
             ]);
          
             $request->user()->tasks()->create([
-                'status' => $request->status,
-                'title' => $request->title,
+                    'status' => $request->status,
+                    'title' => $request->title,
             ]);
         
-       }
+    }
         
-        return redirect('/');
+            return redirect('/');
     }
     /**
      * Display the specified resource.
@@ -100,13 +100,13 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        //追加
-        $tasks = [];
+            //追加
+            $tasks = [];
         if (\Auth::check()) {
             $task = Task::find($id);
         }
-        return view('tasks.show', [
-            'task' => $task,
+            return view('tasks.show', [
+                    'task' => $task,
             ]);
     }
 
@@ -122,12 +122,12 @@ class TasksController extends Controller
     public function edit($id)
     {
       
-        $task = \Auth::user(); 
+            $task = \Auth::user(); 
         
-        $task = Task::find($id);
+            $task = Task::find($id);
         
-        return view('tasks.edit', [
-            'task' => $task,
+            return view('tasks.edit', [
+                    'task' => $task,
             ]);
             
     }
@@ -145,7 +145,7 @@ class TasksController extends Controller
     public function update(Request $request, $id)
     {
         //追加
-        $tasks = [];
+            $tasks = [];
         if (\Auth::check()) {
             $task = Task::find($id);
             $task ->status = $request->status; //追加
@@ -154,11 +154,11 @@ class TasksController extends Controller
         }
         
             $this->validate($request, [
-            'status' => 'required|max:10', //追加
-            'title' => 'required|max:255',
+                        'status' => 'required|max:10', //追加
+                        'title' => 'required|max:255',
             ]);
 
-        return redirect('/');
+            return redirect('/');
     }
 
     /**
@@ -172,14 +172,13 @@ class TasksController extends Controller
      
     public function destroy($id)
     {
-        $tasks = [];
+            $tasks = [];
         if (\Auth::check()) {
-            //$task = \Auth::user(); 
             $task = Task::find($id);
-//            dd($task);
+ //dd($task);
             $task->delete();    
 
         }
-        return redirect('/');
+            return redirect('/');
     }
 }
