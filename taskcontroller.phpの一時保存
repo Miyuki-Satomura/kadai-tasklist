@@ -1,0 +1,29 @@
+    public function store(Request $request)
+    {
+        
+        if (\Auth::check()) {
+            //追加
+ // 削除      $this->user_id =\Auth::user()->user_id;
+ //           Auth::user()->id == $task->user_id;
+            
+        } else {
+            return view('tasks.store', [
+                    'tasks'=>$tasks,
+            ]);
+            
+            
+            //追加
+            $this->validate($request, [
+                    'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
+                    'title' => 'required|max:255',
+            ]);
+         
+            $request->user()->tasks()->create([
+                    'status' => $request->status,
+                    'title' => $request->title,
+            ]);
+        
+    }
+        
+//          return redirect('/');
+//    }

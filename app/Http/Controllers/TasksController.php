@@ -18,7 +18,6 @@ class TasksController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    
     public function index()
     {
         //追加
@@ -26,7 +25,9 @@ class TasksController extends Controller
         $tasks = [];
         if (\Auth::check()) {
             $user = \Auth::user();
-            $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
+ // ↓変更
+           
+                $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
 //dd( $tasks);
             $data = [
                     'user' => $user,
@@ -39,7 +40,7 @@ class TasksController extends Controller
             ]);
         }
         
-            return view('tasks.index', $data);
+        return view('tasks.index', $data);
     }
 
     /**
@@ -50,13 +51,15 @@ class TasksController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-        {
-            //追加
-            $task = new Task;
-        
+    {
+            $tasks = [];
+            if (\Auth::check()) {
+                //追加
+                $task = new Task;
+            }
             return view('tasks.create', [
-                    'task' => $task,
-        ]);
+                    'task'=>$task,
+            ]);
     }
 
     /**
@@ -69,27 +72,26 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
- 
-
+        /*
+        $this->validate($request, [
+                'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
+                'title' => 'required|max:255',
+        ]);
+         */  
         if (\Auth::check()) {
             //追加
-            $this->user_id =\Auth::user()->user_id;
-            
-            //追加
-            $this->validate($request, [
-                    'status' => 'required|max:10', //空のメッセージ禁止。文字数255まで制限。
-                    'title' => 'required|max:255',
-            ]);
-         
             $request->user()->tasks()->create([
-                    'status' => $request->status,
-                    'title' => $request->title,
+                'status' => $request->status,
+                'title' => $request->title,
             ]);
-        
-    }
-        
             return redirect('/');
-    }
+        }
+    }    
+// 削除      $this->user_id =\Auth::user()->user_id;
+ //           Auth::user()->id == $task->user_id;
+//            return view('tasks.store', [
+//                    'tasks'=>$tasks,
+
     /**
      * Display the specified resource.
      *
@@ -101,15 +103,19 @@ class TasksController extends Controller
     public function show($id)
     {
             //追加
-            $tasks = [];
+        $task = [];
         if (\Auth::check()) {
+            $user = \Auth::user();
             $task = Task::find($id);
+            if(\Auth::user()->id == $task->user_id) {
+                return view('tasks.show', [
+                    'task'=>$task,
+                ]);
+            } else {
+                 return redirect('/');
+            }
         }
-            return view('tasks.show', [
-                    'task' => $task,
-            ]);
-    }
-
+    }    
     /**
      * Show the form for editing the specified resource.
      *
@@ -121,16 +127,42 @@ class TasksController extends Controller
       
     public function edit($id)
     {
-      
-            $task = \Auth::user(); 
-        
+        $task = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
             $task = Task::find($id);
+            if(\Auth::user()->id == $task->user_id) {
+                return view('tasks.edit', [
+                    'task'=>$task,
+                ]);
+            } else {
+                 return redirect('/');
+            }
+        }
         
-            return view('tasks.edit', [
-                    'task' => $task,
-            ]);
+
+/*             $task = [];
+  //         \Auth::check()) {
+        if (\Auth::check()) {
+             Auth::user()->id == $task->user_id;
             
+            //else {
+                return view('tasks.edit', [
+                    'task' => $task,
+                ]);
+            }
+*/
     }
+    
+  //2018.1.05 追加
+  //      if (\Auth::check()) {
+           
+   //           if(Auth::user()->id == $task->user_id); 
+  //2018.1.05            
+// 修正     $task = \Auth::user(); 
+  //       $task = Task::find($id);
+  // 修正ここまで   
+
 
     /**
      * Update the specified resource in storage.
@@ -144,23 +176,45 @@ class TasksController extends Controller
      
     public function update(Request $request, $id)
     {
-        //追加
-            $tasks = [];
+        $tasks = [];
+        $this->validate($request, [
+            'status' => 'required|max:10', //追加
+            'title' => 'required|max:255',
+        ]);
+  // 2018.1.05 追加 
         if (\Auth::check()) {
             $task = Task::find($id);
+            
+            if(\Auth::user()->id == $task->user_id) {
+                $task->update([
+                    'title' => $request->title,
+                    'status' => $request->status,
+                ]); 
+            } 
+            return redirect('/');
+        }
+    }
+/*
+  // 修正   $task = Task::find($id);
+            \Auth::user()->id == $task->user_id; 
+            
             $task ->status = $request->status; //追加
             $task ->title = $request->title;
             $task ->save();  
         }
-        
-            $this->validate($request, [
-                        'status' => 'required|max:10', //追加
-                        'title' => 'required|max:255',
-            ]);
-
+ // 2018.1.05  追加       
+        else {
+ //               return view('tasks.update', [
+ //                   'task' => $task,
+ //                ]);
+ // 追加ここまで
+        }
             return redirect('/');
+ //       }
     }
-
+    */
+    
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -172,13 +226,13 @@ class TasksController extends Controller
      
     public function destroy($id)
     {
-            $tasks = [];
+        $task = [];
         if (\Auth::check()) {
             $task = Task::find($id);
- //dd($task);
-            $task->delete();    
-
+            if(\Auth::user()->id == $task->user_id) {
+                $task->delete();    
+            }
         }
-            return redirect('/');
+        return redirect('/');
     }
-}
+}        
